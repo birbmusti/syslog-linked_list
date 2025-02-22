@@ -3,15 +3,15 @@
 #include <string.h>
 #include <time.h>
 
-// Syslog mesaji icin yapi
-typedef struct {
-    time_t timestamp;        // Mesajın zaman damgası
-    char facility[32];       // Mesajın kaynağı
-    char severity[32];       // Mesajın şiddeti
-    char message[256];       // Mesaj içeriği
-} SyslogData;  // Syslog verilerini tutan yapı
 
-// Bagli liste dugumu yapisi
+typedef struct {
+    time_t timestamp;
+    char facility[32];
+    char severity[32];
+    char message[256];      
+} SyslogData;  
+
+
 typedef struct Node {
     SyslogData data;         // Düğümde tutulan syslog verisi
     struct Node* next;       // Sonraki düğüme işaretçi
@@ -22,16 +22,16 @@ Node* createNode(SyslogData data) {
     Node* newNode = (Node*)malloc(sizeof(Node));  // Bellekten yeni düğüm için yer ayır
     if (newNode == NULL) {
         printf("Bellek tahsis hatasi!\n");  // Bellek hatası kontrolü
-        exit(1);  // Bellek hatası durumunda çık
+        exit(1);  
     }
-    newNode->data = data;  // Düğüm verisini ata
-    newNode->next = NULL;   // Yeni düğümün sonraki düğümünü NULL yap
-    return newNode;         // Yeni düğümü döndür
+    newNode->data = data;
+    newNode->next = NULL; 
+    return newNode;
 }
 
 // Listeye yeni mesaj ekleme fonksiyonu
 Node* addSyslogMessage(Node* head, SyslogData data) {
-    Node* newNode = createNode(data);  // Yeni düğüm oluştur
+    Node* newNode = createNode(data);
     
     if (head == NULL) {  // Liste boşsa, yeni düğüm baş düğüm olur
         return newNode;
@@ -52,9 +52,9 @@ SyslogData parseSyslogMessage(const char* message) {
     
     // Mesajı ayrıştırarak facility, severity ve mesaj içeriğini ayıkla
     sscanf(message, "<%[^>]>%[^:]:%[^\n]", 
-           data.facility,  // facility'i ayıkla
-           data.severity,  // severity'i ayıkla
-           data.message);  // Mesaj içeriğini ayıkla
+           data.facility,
+           data.severity,
+           data.message);
     
     return data;  // Ayrıştırılmış veriyi döndür
 }
@@ -93,10 +93,10 @@ int main() {
     
     // Ornek syslog mesajlari
     const char* messages[] = {
-        "<kern>ERROR:Sistem coktu",  // Mesaj 1
-        "<auth>WARNING:Basarisiz giris denemesi",  // Mesaj 2
-        "<daemon>INFO:Servis baslatildi",  // Mesaj 3
-        "<syslog>DEBUG:Yapilandirma dosyasi yuklendi"  // Mesaj 4
+        "<kern>ERROR:Sistem coktu",
+        "<auth>WARNING:Basarisiz giris denemesi",
+        "<daemon>INFO:Servis baslatildi",
+        "<syslog>DEBUG:Yapilandirma dosyasi yuklendi"
     };
     
     // Mesajları listeye ekle
